@@ -43,6 +43,7 @@ Messages must be 1–200 characters and contain exactly one valid HTTP(S) link. 
 ```json
 {
   "success": true,
+  "mode": "live",
   "results": [
     {
       "platform": "Mastodon",
@@ -67,6 +68,25 @@ Messages must be 1–200 characters and contain exactly one valid HTTP(S) link. 
 ```
 
 The success value is true when at least one platform publishes successfully. Timestamps are UTC. `public_access` is set true after successful publication where this implementation requests public visibility. The API cannot independently guarantee visibility to a logged-out visitor if a platform or account applies restrictions.
+
+## Safe local testing
+
+`DRY_RUN=true` is the default. In this mode the endpoint validates the request and returns a `dry_run` result for each of the five platforms without making any outbound requests. No platform credentials are needed, and nothing is published.
+
+```powershell
+# In .env, keep this setting enabled for local testing
+DRY_RUN=true
+```
+
+Try the endpoint from PowerShell while the server is running:
+
+```powershell
+$body = @{ message = "Local dry run only. https://example.com" } | ConvertTo-Json
+Invoke-RestMethod -Method Post -Uri http://localhost:4000/posting -ContentType "application/json" -Body $body
+```
+
+The response has `"mode": "dry_run"`, and each platform result has `"status": "dry_run"`, a null `posted_url`, and `public_access: false`. To enable real publishing later, set `DRY_RUN=false` in `.env`; live mode makes real API calls to platforms with configured credentials.
+
 
 ## Platform setup
 

@@ -1,4 +1,4 @@
-from datetime import date, time
+from datetime import date as Date, time as Time
 from typing import Literal
 
 from pydantic import BaseModel, Field, HttpUrl, field_validator, model_validator
@@ -32,14 +32,15 @@ class PostingRequest(BaseModel):
 
 class PlatformResult(BaseModel):
     platform: str
-    status: Literal["success", "failed"]
+    status: Literal["success", "failed", "dry_run"]
     posted_url: str | None = None
     public_access: bool
-    date: date | None = None
-    time: time | None = None
+    date: Date | None = None
+    time: Time | None = None
     error: str | None = None
 
 
 class PostingResponse(BaseModel):
     success: bool
+    mode: Literal["dry_run", "live"]
     results: list[PlatformResult]

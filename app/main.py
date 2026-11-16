@@ -9,8 +9,11 @@ app = FastAPI(title="Automated Multi-Platform Posting System", version="1.0.0")
 
 @app.post("/posting", response_model=PostingResponse)
 async def create_posts(payload: PostingRequest) -> PostingResponse:
-    results = await publish(payload.message, get_settings())
-    return PostingResponse(success=any(result.status == "success" for result in results), results=results)
+    settings = get_settings()
+    results = await publish(payload.message, settings, dry_run=settings.dry_run)
+    succeeded = (all(result.status == "dry_run" for result in results) if settings.dry_run
+                 else any(result.status == "success" for result in results))
+    return PostingResponse(success=succeeded, mode="dry_run" if settings.dry_run else "live", results=results)
 
 
 @app.get("/health")
