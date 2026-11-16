@@ -69,6 +69,12 @@ Messages must be 1–200 characters and contain exactly one valid HTTP(S) link. 
 
 The success value is true when at least one platform publishes successfully. Timestamps are UTC. `public_access` is set true after successful publication where this implementation requests public visibility. The API cannot independently guarantee visibility to a logged-out visitor if a platform or account applies restrictions.
 
+## Implementation evidence
+
+The screenshot below shows a successful local dry-run response in Swagger UI. The response has HTTP 200 and `mode: "dry_run"`; no platform posts were made.
+
+![Swagger UI dry-run response](screenshots/dry-run.png)
+
 ## Safe local testing
 
 `DRY_RUN=true` is the default. In this mode the endpoint validates the request and returns a `dry_run` result for each of the five platforms without making any outbound requests. No platform credentials are needed, and nothing is published.
