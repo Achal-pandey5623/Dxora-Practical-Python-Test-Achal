@@ -94,6 +94,16 @@ Invoke-RestMethod -Method Post -Uri http://localhost:4000/posting -ContentType "
 The response has `"mode": "dry_run"`, and each platform result has `"status": "dry_run"`, a null `posted_url`, and `public_access: false`. To enable real publishing later, set `DRY_RUN=false` in `.env`; live mode makes real API calls to platforms with configured credentials.
 
 
+## Automated tests
+
+Install the development dependencies and run the offline API tests:
+
+```powershell
+.\.venv\Scripts\python.exe -m pip install -r requirements-dev.txt
+.\.venv\Scripts\python.exe -m pytest -q
+```
+
+The tests cover dry-run response fields and invalid message validation. The dry-run test replaces HTTPX networking with a failure, so it also verifies that no platform requests are sent.
 ## Platform setup
 
 All credentials are optional. Configure only platforms for which you have developer access. Obtain credentials from each platform and set them in `.env`:
